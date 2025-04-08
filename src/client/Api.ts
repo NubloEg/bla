@@ -140,12 +140,6 @@ class Api<TApiContract extends ApiContract> {
 
                 window.clearTimeout(timeoutCancellationToken);
 
-                if(response.ok) {
-                    return response.json().catch(err => {
-                        throw new ApiError(ApiError.INTERNAL_ERROR, err.message, err);
-                    });
-                }
-
                 if(csrfToken) {
                     const newCsrfToken = response.headers.get('X-Csrf-Token');
 
@@ -155,6 +149,12 @@ class Api<TApiContract extends ApiContract> {
                         throw new ApiError(ApiError.WRONG_CSRF_TOKEN);
                     }
                 }
+               
+                if(response.ok) {
+                    return response.json().catch(err => {
+                        throw new ApiError(ApiError.INTERNAL_ERROR, err.message, err);
+                    });
+                }   
 
                 throw new ApiError(ApiError.INTERNAL_ERROR, response.statusText);
             },
